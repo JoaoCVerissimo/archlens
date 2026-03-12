@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ArchLens Documentation</title>
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #1e293b;
+      background: #f8fafc;
+      line-height: 1.7;
+    }
+
+    /* ── Typography ── */
+    h1 { font-size: 2.75rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; }
+    h2 { font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+    h3 { font-size: 1.35rem; font-weight: 600; margin-bottom: 0.4rem; }
+    h4 { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.3rem; }
+    p  { margin-bottom: 1rem; color: #475569; }
+
+    /* ── Layout ── */
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 50%, #7c3aed 100%);
+      color: white;
+      padding: 5rem 0 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 70%, rgba(255,255,255,0.08) 0%, transparent 60%),
+                  radial-gradient(circle at 80% 20%, rgba(255,255,255,0.06) 0%, transparent 50%);
+    }
+    .hero * { position: relative; }
+    .hero p { color: rgba(255,255,255,0.85); font-size: 1.25rem; max-width: 640px; margin: 1rem auto 2rem; }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 999px;
+      padding: 0.35rem 1.1rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 1.25rem;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── Navigation ── */
+    .nav-bar {
+      background: white;
+      border-bottom: 1px solid #e2e8f0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .nav-bar .container {
+      display: flex;
+      gap: 0.25rem;
+      overflow-x: auto;
+      padding-top: 0; padding-bottom: 0;
+      -ms-overflow-style: none; scrollbar-width: none;
+    }
+    .nav-bar .container::-webkit-scrollbar { display: none; }
+    .nav-link {
+      display: block;
+      padding: 0.85rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #64748b;
+      text-decoration: none;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .nav-link:hover { color: #2563eb; border-bottom-color: #2563eb; }
+
+    /* ── Sections ── */
+    section { padding: 4rem 0; }
+    section:nth-child(odd) { background: white; }
+    .section-label {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #2563eb;
+      background: #eff6ff;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      margin-bottom: 0.75rem;
+    }
+    .section-intro { max-width: 680px; font-size: 1.05rem; color: #64748b; margin-bottom: 2.5rem; }
+
+    /* ── Cards ── */
+    .card-grid   { display: grid; gap: 1.25rem; }
+    .card-grid-2 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+    .card-grid-3 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .card-grid-5 { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+    .card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    section:nth-child(odd) .card { background: #f8fafc; }
+    .card:hover { box-shadow: 0 4px 24px rgba(0,0,0,0.06); transform: translateY(-2px); }
+    .card-icon {
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 10px;
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+
+    /* ── Flow diagrams ── */
+    .flow { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin: 2rem 0; }
+    .flow-step {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 0.65rem 1.1rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #334155;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .flow-step .step-num {
+      width: 22px; height: 22px;
+      background: #2563eb;
+      color: white;
+      border-radius: 50%;
+      font-size: 0.7rem;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .flow-arrow { color: #94a3b8; font-size: 1.1rem; flex-shrink: 0; }
+
+    /* ── Pipeline visual ── */
+    .pipeline { margin: 2rem 0; }
+    .pipeline-stage {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.25rem;
+      padding: 1.25rem 0;
+      border-left: 3px solid #e2e8f0;
+      margin-left: 1rem;
+      padding-left: 2rem;
+      position: relative;
+    }
+    .pipeline-stage::before {
+      content: '';
+      position: absolute;
+      left: -8px; top: 1.6rem;
+      width: 13px; height: 13px;
+      border-radius: 50%;
+      border: 3px solid #2563eb;
+      background: white;
+    }
+    .pipeline-stage:last-child { border-left-color: transparent; }
+    .pipeline-stage-title { font-weight: 600; color: #1e293b; margin-bottom: 0.25rem; }
+    .pipeline-stage-desc { font-size: 0.9rem; color: #64748b; }
+
+    /* ── Tables ── */
+    .table-wrap { overflow-x: auto; margin: 1.5rem 0; border-radius: 10px; border: 1px solid #e2e8f0; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #64748b;
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    td { padding: 0.7rem 1rem; border-bottom: 1px solid #f1f5f9; color: #475569; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f8fafc; }
+
+    /* ── Code ── */
+    code {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.82em;
+      background: #f1f5f9;
+      padding: 0.15em 0.45em;
+      border-radius: 5px;
+      color: #6d28d9;
+    }
+    .code-block {
+      background: #1e293b;
+      color: #e2e8f0;
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.82rem;
+      line-height: 1.7;
+      overflow-x: auto;
+      margin: 1rem 0;
+      position: relative;
+    }
+    .code-block .comment { color: #64748b; }
+    .code-block .string { color: #86efac; }
+    .code-block .cmd { color: #93c5fd; }
+
+    /* ── Badges ── */
+    .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .badge-blue { background: #dbeafe; color: #1d4ed8; }
+    .badge-green { background: #dcfce7; color: #15803d; }
+    .badge-purple { background: #f3e8ff; color: #7c3aed; }
+    .badge-amber { background: #fef3c7; color: #b45309; }
+    .badge-red { background: #fee2e2; color: #dc2626; }
+    .badge-gray { background: #f1f5f9; color: #475569; }
+
+    /* ── Method badges ── */
+    .method { font-family: monospace; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.03em; }
+    .method-get { color: #15803d; }
+    .method-post { color: #2563eb; }
+    .method-delete { color: #dc2626; }
+
+    /* ── Prompt cards ── */
+    .prompt-card {
+      background: linear-gradient(135deg, #faf5ff, #f5f3ff);
+      border: 1px solid #e9d5ff;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .prompt-card h4 { color: #7c3aed; }
+    .prompt-role {
+      display: inline-block;
+      background: #7c3aed;
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .prompt-output {
+      display: flex; flex-wrap: wrap; gap: 0.35rem;
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid #e9d5ff;
+    }
+
+    /* ── Architecture diagram ── */
+    .arch-diagram {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin: 2.5rem 0;
+    }
+    .arch-group {
+      text-align: center;
+      min-width: 160px;
+    }
+    .arch-group-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #64748b;
+      margin-bottom: 0.75rem;
+    }
+    .arch-box {
+      border-radius: 10px;
+      padding: 0.75rem 1.25rem;
+      font-weight: 600;
+      font-size: 0.88rem;
+      margin-bottom: 0.5rem;
+    }
+    .arch-box-blue { background: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .arch-box-green { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+    .arch-box-purple { background: #f3e8ff; color: #7c3aed; border: 1px solid #e9d5ff; }
+    .arch-box-amber { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+    .arch-connector {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: #94a3b8;
+      padding: 0.5rem 0;
+    }
+
+    /* ── Stat row ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    .stat-card {
+      text-align: center;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 1.25rem 0.75rem;
+    }
+    section:nth-child(odd) .stat-card { background: #f8fafc; }
+    .stat-value { font-size: 2rem; font-weight: 800; color: #2563eb; }
+    .stat-label { font-size: 0.8rem; color: #64748b; margin-top: 0.15rem; }
+
+    /* ── Divider ── */
+    .divider { height: 1px; background: #e2e8f0; margin: 2.5rem 0; }
+
+    /* ── Footer ── */
+    footer {
+      background: #1e293b;
+      color: #94a3b8;
+      padding: 3rem 0;
+      text-align: center;
+      font-size: 0.88rem;
+    }
+    footer a { color: #93c5fd; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      h1 { font-size: 2rem; }
+      h2 { font-size: 1.5rem; }
+      .hero { padding: 3rem 0 2.5rem; }
+      .hero p { font-size: 1.05rem; }
+      section { padding: 2.5rem 0; }
+      .arch-diagram { flex-direction: column; align-items: center; }
+      .flow { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">Open Source &middot; AI-Powered &middot; Runs Locally</div>
+    <h1>ArchLens</h1>
+    <p>Your AI-powered architecture review companion. Import any Git repository and receive a detailed engineering review &mdash; like having a senior staff engineer analyze your codebase.</p>
+    <div style="display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap;">
+      <a href="#how-it-works" class="nav-link" style="background:white; color:#2563eb; border-radius:8px; padding:0.6rem 1.5rem; font-weight:600; border:none;">How It Works</a>
+      <a href="#quick-start" class="nav-link" style="background:rgba(255,255,255,0.15); color:white; border-radius:8px; padding:0.6rem 1.5rem; font-weight:600; border:1px solid rgba(255,255,255,0.3);">Get Started</a>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════ NAV ═══════════════════ -->
+<nav class="nav-bar">
+  <div class="container">
+    <a href="#how-it-works" class="nav-link">How It Works</a>
+    <a href="#architecture" class="nav-link">Architecture</a>
+    <a href="#pipeline" class="nav-link">Analysis Pipeline</a>
+    <a href="#ai-prompts" class="nav-link">AI Prompts</a>
+    <a href="#features" class="nav-link">Features</a>
+    <a href="#api" class="nav-link">API</a>
+    <a href="#database" class="nav-link">Database</a>
+    <a href="#quick-start" class="nav-link">Quick Start</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════ HOW IT WORKS ═══════════════════ -->
+<section id="how-it-works">
+  <div class="container">
+    <span class="section-label">Overview</span>
+    <h2>How ArchLens Works</h2>
+    <p class="section-intro">
+      ArchLens takes any codebase, breaks it down into understandable pieces, and uses Claude to produce a detailed architecture review with actionable findings.
+    </p>
+
+    <div class="flow">
+      <div class="flow-step"><span class="step-num">1</span> Import Repository</div>
+      <span class="flow-arrow">&rarr;</span>
+      <div class="flow-step"><span class="step-num">2</span> Clone &amp; Index Files</div>
+      <span class="flow-arrow">&rarr;</span>
+      <div class="flow-step"><span class="step-num">3</span> Map Dependencies</div>
+      <span class="flow-arrow">&rarr;</span>
+      <div class="flow-step"><span class="step-num">4</span> Chunk by Module</div>
+      <span class="flow-arrow">&rarr;</span>
+      <div class="flow-step"><span class="step-num">5</span> AI Analysis</div>
+      <span class="flow-arrow">&rarr;</span>
+      <div class="flow-step"><span class="step-num">6</span> Synthesize Findings</div>
+      <span class="flow-arrow">&rarr;</span>
+      <div class="flow-step"><span class="step-num">7</span> Generate Report</div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value">30+</div>
+        <div class="stat-label">Languages Supported</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">5</div>
+        <div class="stat-label">Analysis Types</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">7</div>
+        <div class="stat-label">Finding Categories</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">4</div>
+        <div class="stat-label">Report Formats</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">100%</div>
+        <div class="stat-label">Runs Locally</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ ARCHITECTURE ═══════════════════ -->
+<section id="architecture">
+  <div class="container">
+    <span class="section-label">System Design</span>
+    <h2>Architecture Overview</h2>
+    <p class="section-intro">
+      ArchLens is a monorepo with three application services, two shared packages, and infrastructure running entirely via Docker Compose.
+    </p>
+
+    <div class="arch-diagram">
+      <div class="arch-group">
+        <div class="arch-group-label">Frontend</div>
+        <div class="arch-box arch-box-blue">Next.js App<br><small style="font-weight:400; opacity:0.8">Port 3000</small></div>
+      </div>
+      <div class="arch-group">
+        <div class="arch-group-label">Backend</div>
+        <div class="arch-box arch-box-green">Fastify API<br><small style="font-weight:400; opacity:0.8">Port 3001</small></div>
+        <div class="arch-box arch-box-green" style="margin-top:0.5rem;">BullMQ Worker<br><small style="font-weight:400; opacity:0.8">Background Jobs</small></div>
+      </div>
+      <div class="arch-group">
+        <div class="arch-group-label">Infrastructure</div>
+        <div class="arch-box arch-box-amber">PostgreSQL 16<br><small style="font-weight:400; opacity:0.8">Data Store</small></div>
+        <div class="arch-box arch-box-amber" style="margin-top:0.5rem;">Redis 7<br><small style="font-weight:400; opacity:0.8">Job Queue</small></div>
+      </div>
+      <div class="arch-group">
+        <div class="arch-group-label">External</div>
+        <div class="arch-box arch-box-purple">Claude API<br><small style="font-weight:400; opacity:0.8">AI Analysis</small></div>
+        <div class="arch-box arch-box-purple" style="margin-top:0.5rem;">GitHub<br><small style="font-weight:400; opacity:0.8">Repo Source</small></div>
+      </div>
+    </div>
+
+    <div class="card-grid card-grid-2" style="margin-top:2rem;">
+      <div class="card">
+        <div class="card-icon" style="background:#dbeafe; color:#2563eb;">&#x1f310;</div>
+        <h4>Web Frontend</h4>
+        <p>Built with Next.js 15, Tailwind CSS, and React Flow. Provides a dashboard for managing repositories, viewing analysis results, reading reports, and exploring interactive dependency graphs.</p>
+        <div style="display:flex; gap:0.35rem; flex-wrap:wrap;">
+          <span class="badge badge-blue">Next.js</span>
+          <span class="badge badge-blue">Tailwind</span>
+          <span class="badge badge-blue">React Flow</span>
+          <span class="badge badge-blue">SWR</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#dcfce7; color:#15803d;">&#x26a1;</div>
+        <h4>REST API</h4>
+        <p>Fastify 5 server handling all HTTP requests. Manages repositories, triggers analyses, serves reports, and provides dependency graph data. Validates requests and enqueues background jobs via Redis.</p>
+        <div style="display:flex; gap:0.35rem; flex-wrap:wrap;">
+          <span class="badge badge-green">Fastify</span>
+          <span class="badge badge-green">TypeScript</span>
+          <span class="badge badge-green">Drizzle ORM</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#fef3c7; color:#b45309;">&#x2699;&#xfe0f;</div>
+        <h4>Background Worker</h4>
+        <p>BullMQ-powered worker that processes long-running jobs: cloning Git repos, indexing source files, running the AI analysis pipeline, and generating reports. Runs independently from the API.</p>
+        <div style="display:flex; gap:0.35rem; flex-wrap:wrap;">
+          <span class="badge badge-amber">BullMQ</span>
+          <span class="badge badge-amber">Anthropic SDK</span>
+          <span class="badge badge-amber">simple-git</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#f3e8ff; color:#7c3aed;">&#x1f4e6;</div>
+        <h4>Shared Packages</h4>
+        <p>Two internal packages keep everything consistent. <code>@archlens/shared</code> provides TypeScript types, constants, and utilities. <code>@archlens/db</code> defines the Drizzle ORM schema shared by API and Worker.</p>
+        <div style="display:flex; gap:0.35rem; flex-wrap:wrap;">
+          <span class="badge badge-purple">shared</span>
+          <span class="badge badge-purple">db</span>
+          <span class="badge badge-purple">Turborepo</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ PIPELINE ═══════════════════ -->
+<section id="pipeline">
+  <div class="container">
+    <span class="section-label">Core Engine</span>
+    <h2>The Analysis Pipeline</h2>
+    <p class="section-intro">
+      When you trigger an analysis, the system walks through a multi-stage pipeline that breaks your codebase into understandable pieces, sends each to Claude for review, and synthesizes everything into a unified report.
+    </p>
+
+    <div class="pipeline">
+      <div class="pipeline-stage">
+        <div>
+          <div class="pipeline-stage-title">1. Repository Ingestion</div>
+          <div class="pipeline-stage-desc">
+            The system clones your repository (via <code>git clone --depth 1</code>), extracts a ZIP upload, or reads from a local path. Binary files, <code>node_modules</code>, and other noise are automatically filtered out.
+          </div>
+        </div>
+      </div>
+      <div class="pipeline-stage">
+        <div>
+          <div class="pipeline-stage-title">2. File Indexing</div>
+          <div class="pipeline-stage-desc">
+            Every source file is walked, its language detected (30+ supported), and a regex-based parser extracts symbols &mdash; classes, functions, exports, and imports. Each file's content is hashed (SHA-256) and stored with metadata.
+          </div>
+        </div>
+      </div>
+      <div class="pipeline-stage">
+        <div>
+          <div class="pipeline-stage-title">3. Dependency Graph Construction</div>
+          <div class="pipeline-stage-desc">
+            Import statements are resolved to actual files in the repository. Relative imports like <code>./utils</code> are resolved with extension probing (<code>.ts</code>, <code>.tsx</code>, <code>.js</code>, <code>/index.ts</code>, etc). The result is a full graph of internal and external dependencies.
+          </div>
+        </div>
+      </div>
+      <div class="pipeline-stage">
+        <div>
+          <div class="pipeline-stage-title">4. Smart Chunking</div>
+          <div class="pipeline-stage-desc">
+            Files are grouped into logical modules by their top-level directory. Each module is checked against a 60,000-token target. Large modules are automatically split into sub-chunks so that each piece fits comfortably within Claude's context window.
+          </div>
+        </div>
+      </div>
+      <div class="pipeline-stage">
+        <div>
+          <div class="pipeline-stage-title">5. AI Module Analysis</div>
+          <div class="pipeline-stage-desc">
+            Each module chunk is sent to Claude with a specialized prompt. Up to 3 modules are analyzed in parallel. Claude reviews each module for design patterns, anti-patterns, security concerns, complexity hotspots, tech debt, and improvement opportunities. Results come back as structured JSON.
+          </div>
+        </div>
+      </div>
+      <div class="pipeline-stage">
+        <div>
+          <div class="pipeline-stage-title">6. Architecture Synthesis</div>
+          <div class="pipeline-stage-desc">
+            All module-level analyses are combined and sent to Claude for a holistic synthesis. This step identifies cross-cutting concerns, architecture style, system-wide patterns, and produces the unified findings list covering security issues, scalability risks, and improvement suggestions.
+          </div>
+        </div>
+      </div>
+      <div class="pipeline-stage">
+        <div>
+          <div class="pipeline-stage-title">7. Report Generation</div>
+          <div class="pipeline-stage-desc">
+            Findings are organized into a structured report with sections: Executive Summary, Architecture Patterns, Issues &amp; Anti-patterns, Security Findings, Scalability Risks, Improvement Suggestions, and Technical Debt. Reports are rendered as navigable markdown in the UI.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="background:linear-gradient(135deg, #f0fdf4, #ecfdf5); border-color:#bbf7d0; margin-top:2rem;">
+      <h4 style="color:#15803d;">Resilient by Design</h4>
+      <p style="margin-bottom:0;">
+        Each chunk is independently retried up to 3 times with exponential backoff. If a chunk fails permanently, the analysis continues with the remaining modules. Only if more than 50% of chunks fail does the entire analysis stop. Token usage is tracked throughout for cost visibility.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ AI PROMPTS ═══════════════════ -->
+<section id="ai-prompts">
+  <div class="container">
+    <span class="section-label">AI Strategy</span>
+    <h2>Claude Prompt Templates</h2>
+    <p class="section-intro">
+      ArchLens uses five specialized prompts, each designed to extract a different dimension of architectural insight. Every prompt asks Claude to respond with structured JSON for reliable parsing.
+    </p>
+
+    <div class="prompt-card">
+      <span class="prompt-role">Prompt 1</span>
+      <h4>Module Analysis</h4>
+      <p>Claude acts as a senior staff engineer reviewing a single module. It receives the full source code of every file in the module along with dependency context.</p>
+      <div class="prompt-output">
+        <span class="badge badge-purple">Patterns Used</span>
+        <span class="badge badge-purple">Anti-patterns</span>
+        <span class="badge badge-purple">Complexity Hotspots</span>
+        <span class="badge badge-purple">Security Concerns</span>
+        <span class="badge badge-purple">Tech Debt</span>
+        <span class="badge badge-purple">Strengths</span>
+        <span class="badge badge-purple">Improvements</span>
+      </div>
+    </div>
+
+    <div class="prompt-card">
+      <span class="prompt-role">Prompt 2</span>
+      <h4>Architecture Synthesis</h4>
+      <p>Claude combines all module-level analyses into a unified architecture review. It sees condensed summaries (not full code) from every module plus the dependency graph overview.</p>
+      <div class="prompt-output">
+        <span class="badge badge-purple">Architecture Summary</span>
+        <span class="badge badge-purple">Architecture Style</span>
+        <span class="badge badge-purple">Cross-cutting Concerns</span>
+        <span class="badge badge-purple">Potential Problems</span>
+        <span class="badge badge-purple">Security Issues</span>
+        <span class="badge badge-purple">Scalability Risks</span>
+        <span class="badge badge-purple">Onboarding Notes</span>
+      </div>
+    </div>
+
+    <div class="prompt-card">
+      <span class="prompt-role">Prompt 3</span>
+      <h4>Security Audit</h4>
+      <p>Claude acts as a dedicated security engineer, focusing exclusively on vulnerabilities. Findings are classified using CWE IDs where applicable, with exploit scenarios and fix hints.</p>
+      <div class="prompt-output">
+        <span class="badge badge-red">Vulnerabilities + CWE</span>
+        <span class="badge badge-red">Security Posture</span>
+        <span class="badge badge-red">Missing Controls</span>
+        <span class="badge badge-red">Exploit Scenarios</span>
+      </div>
+    </div>
+
+    <div class="prompt-card">
+      <span class="prompt-role">Prompt 4</span>
+      <h4>Code Quality</h4>
+      <p>Claude evaluates maintainability, readability, naming conventions, error handling quality, and testing indicators. Each dimension gets a 1&ndash;10 score.</p>
+      <div class="prompt-output">
+        <span class="badge badge-blue">Quality Score</span>
+        <span class="badge badge-blue">Readability</span>
+        <span class="badge badge-blue">Maintainability</span>
+        <span class="badge badge-blue">Naming</span>
+        <span class="badge badge-blue">Error Handling</span>
+        <span class="badge badge-blue">Code Smells</span>
+      </div>
+    </div>
+
+    <div class="prompt-card">
+      <span class="prompt-role">Prompt 5</span>
+      <h4>Dependency Review</h4>
+      <p>Claude analyzes the full dependency structure &mdash; both external packages and internal module coupling. It detects circular dependencies, layering violations, and suggests better boundaries.</p>
+      <div class="prompt-output">
+        <span class="badge badge-amber">External Deps Assessment</span>
+        <span class="badge badge-amber">Circular Dependencies</span>
+        <span class="badge badge-amber">Coupling Assessment</span>
+        <span class="badge badge-amber">Module Boundaries</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FEATURES ═══════════════════ -->
+<section id="features">
+  <div class="container">
+    <span class="section-label">Capabilities</span>
+    <h2>What ArchLens Analyzes</h2>
+    <p class="section-intro">
+      From the moment you import a repo to the final report, ArchLens covers every angle of your codebase.
+    </p>
+
+    <h3 style="margin-bottom:1rem;">Analysis Types</h3>
+    <div class="card-grid card-grid-5" style="margin-bottom:2.5rem;">
+      <div class="card" style="text-align:center;">
+        <div style="font-size:1.75rem; margin-bottom:0.5rem;">&#x1f3d7;&#xfe0f;</div>
+        <h4>Full</h4>
+        <p style="font-size:0.85rem;">Complete review covering all dimensions</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:1.75rem; margin-bottom:0.5rem;">&#x1f3db;&#xfe0f;</div>
+        <h4>Architecture</h4>
+        <p style="font-size:0.85rem;">Patterns, layers, and structural design</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:1.75rem; margin-bottom:0.5rem;">&#x2728;</div>
+        <h4>Code Quality</h4>
+        <p style="font-size:0.85rem;">Readability, maintainability, and smells</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:1.75rem; margin-bottom:0.5rem;">&#x1f6e1;&#xfe0f;</div>
+        <h4>Security</h4>
+        <p style="font-size:0.85rem;">Vulnerabilities and missing controls</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:1.75rem; margin-bottom:0.5rem;">&#x1f517;</div>
+        <h4>Dependencies</h4>
+        <p style="font-size:0.85rem;">Coupling, circulars, and boundaries</p>
+      </div>
+    </div>
+
+    <h3 style="margin-bottom:1rem;">Finding Categories</h3>
+    <div class="card-grid card-grid-3" style="margin-bottom:2.5rem;">
+      <div class="card">
+        <span class="badge badge-green">Pattern</span>
+        <p style="margin-top:0.5rem; font-size:0.9rem;">Recognized design patterns like Repository, Factory, Observer &mdash; rated as good, acceptable, or poor.</p>
+      </div>
+      <div class="card">
+        <span class="badge badge-red">Anti-pattern</span>
+        <p style="margin-top:0.5rem; font-size:0.9rem;">Problematic patterns such as god classes, tight coupling, circular dependencies, with refactor suggestions.</p>
+      </div>
+      <div class="card">
+        <span class="badge badge-red">Security</span>
+        <p style="margin-top:0.5rem; font-size:0.9rem;">Vulnerabilities classified by CWE, with severity ratings and remediation recommendations.</p>
+      </div>
+      <div class="card">
+        <span class="badge badge-amber">Scalability</span>
+        <p style="margin-top:0.5rem; font-size:0.9rem;">Bottlenecks and architectural choices that could limit growth, with migration strategies.</p>
+      </div>
+      <div class="card">
+        <span class="badge badge-blue">Complexity</span>
+        <p style="margin-top:0.5rem; font-size:0.9rem;">Files and functions flagged as overly complex, with complexity hotspot analysis.</p>
+      </div>
+      <div class="card">
+        <span class="badge badge-gray">Tech Debt</span>
+        <p style="margin-top:0.5rem; font-size:0.9rem;">Accumulated shortcuts rated by effort to fix and impact on the project.</p>
+      </div>
+      <div class="card">
+        <span class="badge badge-purple">Suggestion</span>
+        <p style="margin-top:0.5rem; font-size:0.9rem;">Proactive improvement ideas with priority and effort estimates.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-bottom:1rem;">Severity Levels</h3>
+    <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:2.5rem;">
+      <span class="badge badge-gray" style="font-size:0.8rem; padding:0.4rem 1rem;">Info</span>
+      <span class="badge badge-blue" style="font-size:0.8rem; padding:0.4rem 1rem;">Low</span>
+      <span class="badge badge-amber" style="font-size:0.8rem; padding:0.4rem 1rem;">Medium</span>
+      <span class="badge badge-red" style="font-size:0.8rem; padding:0.4rem 1rem;">High</span>
+      <span style="background:#7f1d1d; color:white; font-size:0.8rem; padding:0.4rem 1rem; border-radius:999px; font-weight:600;">Critical</span>
+    </div>
+
+    <h3 style="margin-bottom:1rem;">Report Types</h3>
+    <div class="card-grid card-grid-2">
+      <div class="card">
+        <h4>Full Review</h4>
+        <p>Comprehensive report with every section: executive summary, patterns, issues, security, scalability, suggestions, and tech debt.</p>
+      </div>
+      <div class="card">
+        <h4>Architecture Overview</h4>
+        <p>Focused on structural patterns, module boundaries, and how the system is organized architecturally.</p>
+      </div>
+      <div class="card">
+        <h4>Onboarding Guide</h4>
+        <p>A friendly walkthrough designed to help new engineers quickly understand the codebase and start contributing.</p>
+      </div>
+      <div class="card">
+        <h4>Tech Debt Assessment</h4>
+        <p>Focused on accumulated shortcuts and maintenance burden, with effort/impact ratings for prioritization.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FRONTEND PAGES ═══════════════════ -->
+<section id="pages">
+  <div class="container">
+    <span class="section-label">User Interface</span>
+    <h2>Frontend Pages</h2>
+    <p class="section-intro">
+      The Next.js frontend provides a complete workflow from importing a repository to exploring interactive dependency graphs.
+    </p>
+
+    <div class="card-grid card-grid-3">
+      <div class="card">
+        <h4>Dashboard</h4>
+        <p style="font-size:0.9rem;">Landing page showing your recent repositories with quick stats. One click to add a new repo.</p>
+        <code style="font-size:0.75rem;">/</code>
+      </div>
+      <div class="card">
+        <h4>Repository List</h4>
+        <p style="font-size:0.9rem;">All repositories in a filterable grid, each showing status, languages, and timestamps.</p>
+        <code style="font-size:0.75rem;">/repositories</code>
+      </div>
+      <div class="card">
+        <h4>Add Repository</h4>
+        <p style="font-size:0.9rem;">Form to import via GitHub URL, ZIP upload, or local path. Pick a branch and go.</p>
+        <code style="font-size:0.75rem;">/repositories/new</code>
+      </div>
+      <div class="card">
+        <h4>Repository Detail</h4>
+        <p style="font-size:0.9rem;">Central hub: file stats, language breakdown bars, analysis triggers, and results list.</p>
+        <code style="font-size:0.75rem;">/repositories/:id</code>
+      </div>
+      <div class="card">
+        <h4>Analysis Results</h4>
+        <p style="font-size:0.9rem;">Live progress bar during analysis, then a full list of findings with severity badges.</p>
+        <code style="font-size:0.75rem;">/repositories/:id/analysis</code>
+      </div>
+      <div class="card">
+        <h4>Report Viewer</h4>
+        <p style="font-size:0.9rem;">Generate and view markdown-rendered reports with section navigation.</p>
+        <code style="font-size:0.75rem;">/repositories/:id/report</code>
+      </div>
+      <div class="card">
+        <h4>Dependency Graph</h4>
+        <p style="font-size:0.9rem;">Interactive React Flow visualization. Pan, zoom, and explore how files connect.</p>
+        <code style="font-size:0.75rem;">/repositories/:id/graph</code>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ API ═══════════════════ -->
+<section id="api">
+  <div class="container">
+    <span class="section-label">REST API</span>
+    <h2>API Endpoints</h2>
+    <p class="section-intro">
+      All endpoints live under <code>/api/v1</code> and require an <code>X-API-Key</code> header. The API returns a standard <code>{success, data, error, meta}</code> envelope.
+    </p>
+
+    <h3>Repositories</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:80px;">Method</th><th>Endpoint</th><th>What It Does</th></tr></thead>
+        <tbody>
+          <tr><td><span class="method method-post">POST</span></td><td><code>/repositories</code></td><td>Create a new repository and start the ingestion process (clone/extract)</td></tr>
+          <tr><td><span class="method method-get">GET</span></td><td><code>/repositories</code></td><td>List all repositories with pagination and optional status filter</td></tr>
+          <tr><td><span class="method method-get">GET</span></td><td><code>/repositories/:id</code></td><td>Get full details for a single repository including language breakdown and stats</td></tr>
+          <tr><td><span class="method method-delete">DELETE</span></td><td><code>/repositories/:id</code></td><td>Delete a repository and cascade-delete all analyses, findings, and reports</td></tr>
+          <tr><td><span class="method method-get">GET</span></td><td><code>/repositories/:id/files</code></td><td>List all indexed source files with language, size, and extracted symbols</td></tr>
+          <tr><td><span class="method method-post">POST</span></td><td><code>/repositories/:id/reindex</code></td><td>Re-trigger the ingestion and indexing process from scratch</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:2rem;">Analyses</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:80px;">Method</th><th>Endpoint</th><th>What It Does</th></tr></thead>
+        <tbody>
+          <tr><td><span class="method method-post">POST</span></td><td><code>/repositories/:id/analyses</code></td><td>Start a new analysis (full, architecture, code_quality, security, or dependencies)</td></tr>
+          <tr><td><span class="method method-get">GET</span></td><td><code>/repositories/:id/analyses</code></td><td>List all analyses for a repository with status and progress</td></tr>
+          <tr><td><span class="method method-get">GET</span></td><td><code>/analyses/:id</code></td><td>Get a single analysis with real-time progress (poll this for live updates)</td></tr>
+          <tr><td><span class="method method-get">GET</span></td><td><code>/analyses/:id/findings</code></td><td>Get findings with optional category and severity filters</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:2rem;">Reports</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:80px;">Method</th><th>Endpoint</th><th>What It Does</th></tr></thead>
+        <tbody>
+          <tr><td><span class="method method-post">POST</span></td><td><code>/analyses/:id/reports</code></td><td>Generate a report from a completed analysis (full_review, architecture_overview, onboarding, tech_debt)</td></tr>
+          <tr><td><span class="method method-get">GET</span></td><td><code>/reports/:id</code></td><td>Get a report with all its markdown sections</td></tr>
+          <tr><td><span class="method method-get">GET</span></td><td><code>/repositories/:id/reports</code></td><td>List all reports for a repository</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:2rem;">Dependency Graphs</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:80px;">Method</th><th>Endpoint</th><th>What It Does</th></tr></thead>
+        <tbody>
+          <tr><td><span class="method method-get">GET</span></td><td><code>/repositories/:id/graph</code></td><td>Get the file-level dependency graph with nodes and edges for visualization</td></tr>
+          <tr><td><span class="method method-get">GET</span></td><td><code>/repositories/:id/graph/modules</code></td><td>Get a module-level (clustered) view of dependencies with connection weights</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ DATABASE ═══════════════════ -->
+<section id="database">
+  <div class="container">
+    <span class="section-label">Data Model</span>
+    <h2>Database Schema</h2>
+    <p class="section-intro">
+      Seven PostgreSQL tables track everything from raw files to AI-generated findings. All use UUIDs and cascade deletes to keep data consistent.
+    </p>
+
+    <div class="card-grid card-grid-3" style="margin-bottom:2rem;">
+      <div class="card" style="text-align:center; border-left:4px solid #2563eb;">
+        <h4>repositories</h4>
+        <p style="font-size:0.85rem;">Name, source, status, languages, stats</p>
+      </div>
+      <div class="card" style="text-align:center; border-left:4px solid #2563eb;">
+        <h4>files</h4>
+        <p style="font-size:0.85rem;">Path, language, size, lines, symbols</p>
+      </div>
+      <div class="card" style="text-align:center; border-left:4px solid #2563eb;">
+        <h4>dependencies</h4>
+        <p style="font-size:0.85rem;">Source file &rarr; target file with type</p>
+      </div>
+      <div class="card" style="text-align:center; border-left:4px solid #7c3aed;">
+        <h4>analyses</h4>
+        <p style="font-size:0.85rem;">Type, status, progress, token usage</p>
+      </div>
+      <div class="card" style="text-align:center; border-left:4px solid #7c3aed;">
+        <h4>analysis_chunks</h4>
+        <p style="font-size:0.85rem;">Module chunks with Claude responses</p>
+      </div>
+      <div class="card" style="text-align:center; border-left:4px solid #15803d;">
+        <h4>findings</h4>
+        <p style="font-size:0.85rem;">Category, severity, description, suggestion</p>
+      </div>
+      <div class="card" style="text-align:center; border-left:4px solid #15803d;">
+        <h4>reports</h4>
+        <p style="font-size:0.85rem;">Type, sections (markdown), summary</p>
+      </div>
+    </div>
+
+    <h3 style="margin-bottom:0.75rem;">Relationships</h3>
+    <div class="code-block" style="font-size:0.8rem;">
+<span class="comment">-- Data flows through these relationships:</span>
+
+repository  <span class="string">1 ─── * </span> files          <span class="comment">(indexed source files)</span>
+repository  <span class="string">1 ─── * </span> dependencies   <span class="comment">(import/require links between files)</span>
+repository  <span class="string">1 ─── * </span> analyses       <span class="comment">(AI review sessions)</span>
+analysis    <span class="string">1 ─── * </span> analysis_chunks<span class="comment"> (module-level Claude calls)</span>
+analysis    <span class="string">1 ─── * </span> findings       <span class="comment">(extracted insights)</span>
+analysis    <span class="string">1 ─── * </span> reports        <span class="comment">(generated documents)</span>
+
+<span class="comment">-- All children cascade-delete when the parent is removed.</span>
+    </div>
+
+    <h3 style="margin-top:2rem; margin-bottom:0.75rem;">Status Lifecycles</h3>
+    <div class="card-grid card-grid-2">
+      <div class="card">
+        <h4>Repository Status</h4>
+        <div class="flow" style="margin:0.75rem 0 0;">
+          <span class="badge badge-gray">pending</span>
+          <span class="flow-arrow">&rarr;</span>
+          <span class="badge badge-blue">cloning</span>
+          <span class="flow-arrow">&rarr;</span>
+          <span class="badge badge-blue">cloned</span>
+          <span class="flow-arrow">&rarr;</span>
+          <span class="badge badge-blue">indexing</span>
+          <span class="flow-arrow">&rarr;</span>
+          <span class="badge badge-green">indexed</span>
+        </div>
+        <p style="font-size:0.8rem; color:#94a3b8; margin-top:0.5rem;">Can transition to <span class="badge badge-red" style="font-size:0.65rem;">failed</span> at any step</p>
+      </div>
+      <div class="card">
+        <h4>Analysis Status</h4>
+        <div class="flow" style="margin:0.75rem 0 0;">
+          <span class="badge badge-gray">queued</span>
+          <span class="flow-arrow">&rarr;</span>
+          <span class="badge badge-blue">chunking</span>
+          <span class="flow-arrow">&rarr;</span>
+          <span class="badge badge-blue">analyzing</span>
+          <span class="flow-arrow">&rarr;</span>
+          <span class="badge badge-purple">synthesizing</span>
+          <span class="flow-arrow">&rarr;</span>
+          <span class="badge badge-green">completed</span>
+        </div>
+        <p style="font-size:0.8rem; color:#94a3b8; margin-top:0.5rem;">Can transition to <span class="badge badge-red" style="font-size:0.65rem;">failed</span> at any step</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ QUICK START ═══════════════════ -->
+<section id="quick-start">
+  <div class="container">
+    <span class="section-label">Get Started</span>
+    <h2>Running ArchLens Locally</h2>
+    <p class="section-intro">
+      Everything runs on your machine. You just need Node.js, Docker, and a Claude API key.
+    </p>
+
+    <h3>Prerequisites</h3>
+    <div class="card-grid card-grid-3" style="margin:1rem 0 2rem;">
+      <div class="card" style="text-align:center;">
+        <div style="font-size:1.5rem; margin-bottom:0.5rem;">&#x1f4e6;</div>
+        <h4>Node.js &ge; 20</h4>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:1.5rem; margin-bottom:0.5rem;">&#x1f433;</div>
+        <h4>Docker &amp; Compose</h4>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:1.5rem; margin-bottom:0.5rem;">&#x1f511;</div>
+        <h4>Anthropic API Key</h4>
+      </div>
+    </div>
+
+    <h3>Setup &amp; Run</h3>
+    <div class="code-block">
+<span class="comment"># 1. Clone and enter the project</span>
+<span class="cmd">git clone</span> &lt;repo-url&gt; && <span class="cmd">cd</span> archlens
+
+<span class="comment"># 2. Set up environment variables</span>
+<span class="cmd">cp</span> .env.example .env
+<span class="comment"># Edit .env and add your ANTHROPIC_API_KEY</span>
+
+<span class="comment"># 3. Install all dependencies</span>
+<span class="cmd">make</span> install
+
+<span class="comment"># 4. Start Postgres and Redis containers</span>
+<span class="cmd">make</span> infra
+
+<span class="comment"># 5. Create database tables</span>
+<span class="cmd">make</span> migrate
+
+<span class="comment"># 6. Start all development servers</span>
+<span class="cmd">make</span> dev
+    </div>
+
+    <div class="card" style="background:#eff6ff; border-color:#bfdbfe; margin:1.5rem 0;">
+      <p style="margin-bottom:0;">
+        Once running, open <strong><a href="http://localhost:3000" style="color:#2563eb;">http://localhost:3000</a></strong> for the web UI, or hit the API directly at <strong>http://localhost:3001</strong>.
+      </p>
+    </div>
+
+    <h3 style="margin-top:2rem;">Docker (Production-like)</h3>
+    <div class="code-block">
+<span class="comment"># Build and start all 5 services in Docker</span>
+<span class="cmd">make</span> docker-up
+
+<span class="comment"># Stop everything</span>
+<span class="cmd">make</span> docker-down
+    </div>
+
+    <h3 style="margin-top:2rem;">All Make Commands</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th>What It Does</th></tr></thead>
+        <tbody>
+          <tr><td><code>make install</code></td><td>Install all npm dependencies across the monorepo</td></tr>
+          <tr><td><code>make infra</code></td><td>Start PostgreSQL and Redis containers for local development</td></tr>
+          <tr><td><code>make infra-down</code></td><td>Stop infrastructure containers</td></tr>
+          <tr><td><code>make migrate</code></td><td>Generate and run Drizzle database migrations</td></tr>
+          <tr><td><code>make dev</code></td><td>Start Postgres + Redis and all dev servers with hot reload</td></tr>
+          <tr><td><code>make build</code></td><td>Build all packages and apps for production</td></tr>
+          <tr><td><code>make typecheck</code></td><td>Run TypeScript type checking across all packages</td></tr>
+          <tr><td><code>make lint</code></td><td>Run linters across all packages</td></tr>
+          <tr><td><code>make test</code></td><td>Run tests across all packages</td></tr>
+          <tr><td><code>make docker-up</code></td><td>Build Docker images and start all services</td></tr>
+          <tr><td><code>make docker-down</code></td><td>Stop all Docker Compose services</td></tr>
+          <tr><td><code>make clean</code></td><td>Remove all build artifacts and node_modules</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:2rem;">Environment Variables</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Variable</th><th>Required</th><th>Default</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>ANTHROPIC_API_KEY</code></td><td><span class="badge badge-red">Yes</span></td><td>&mdash;</td><td>Your Claude API key for running analyses</td></tr>
+          <tr><td><code>DATABASE_URL</code></td><td><span class="badge badge-red">Yes</span></td><td style="font-size:0.75rem;"><code>postgres://archlens:archlens_dev@localhost:5432/archlens</code></td><td>PostgreSQL connection string</td></tr>
+          <tr><td><code>REDIS_URL</code></td><td><span class="badge badge-gray">No</span></td><td><code>redis://localhost:6379</code></td><td>Redis connection for job queues</td></tr>
+          <tr><td><code>API_PORT</code></td><td><span class="badge badge-gray">No</span></td><td><code>3001</code></td><td>Port for the Fastify API server</td></tr>
+          <tr><td><code>API_KEY</code></td><td><span class="badge badge-gray">No</span></td><td><code>archlens-dev-key</code></td><td>API key for authenticating requests</td></tr>
+          <tr><td><code>NEXT_PUBLIC_API_URL</code></td><td><span class="badge badge-gray">No</span></td><td style="font-size:0.75rem;"><code>http://localhost:3001/api/v1</code></td><td>API URL used by the frontend</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ TECH STACK ═══════════════════ -->
+<section id="tech-stack">
+  <div class="container">
+    <span class="section-label">Built With</span>
+    <h2>Tech Stack</h2>
+    <p class="section-intro">All open source. No paid infrastructure. Everything runs locally.</p>
+
+    <div class="card-grid card-grid-3">
+      <div class="card">
+        <h4>Frontend</h4>
+        <div style="display:flex; flex-direction:column; gap:0.4rem; margin-top:0.5rem;">
+          <span>Next.js 15 <span class="badge badge-blue">App Router</span></span>
+          <span>TypeScript</span>
+          <span>Tailwind CSS</span>
+          <span>React Flow <span class="badge badge-blue">Graph Viz</span></span>
+          <span>SWR <span class="badge badge-blue">Data Fetching</span></span>
+        </div>
+      </div>
+      <div class="card">
+        <h4>Backend</h4>
+        <div style="display:flex; flex-direction:column; gap:0.4rem; margin-top:0.5rem;">
+          <span>Fastify 5 <span class="badge badge-green">HTTP</span></span>
+          <span>TypeScript</span>
+          <span>Drizzle ORM <span class="badge badge-green">Database</span></span>
+          <span>BullMQ <span class="badge badge-green">Job Queue</span></span>
+          <span>Anthropic SDK <span class="badge badge-green">AI</span></span>
+        </div>
+      </div>
+      <div class="card">
+        <h4>Infrastructure</h4>
+        <div style="display:flex; flex-direction:column; gap:0.4rem; margin-top:0.5rem;">
+          <span>PostgreSQL 16 <span class="badge badge-amber">Data</span></span>
+          <span>Redis 7 <span class="badge badge-amber">Queue</span></span>
+          <span>Docker <span class="badge badge-amber">Containers</span></span>
+          <span>Docker Compose <span class="badge badge-amber">Orchestration</span></span>
+          <span>Turborepo <span class="badge badge-amber">Build</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ EXAMPLE OUTPUT ═══════════════════ -->
+<section id="example">
+  <div class="container">
+    <span class="section-label">Example</span>
+    <h2>Sample Analysis Output</h2>
+    <p class="section-intro">
+      Here's what a synthesized analysis result looks like. This is the structured JSON that gets parsed into findings and rendered in reports.
+    </p>
+
+    <div class="code-block" style="font-size:0.78rem;">
+{
+  <span class="string">"architectureSummary"</span>: <span class="string">"The system follows a layered monolith pattern
+    with clear separation between API routes, service logic,
+    and data access..."</span>,
+
+  <span class="string">"identifiedPatterns"</span>: [
+    {
+      <span class="string">"name"</span>: <span class="string">"Repository Pattern"</span>,
+      <span class="string">"description"</span>: <span class="string">"Data access abstracted behind repository classes"</span>,
+      <span class="string">"assessment"</span>: <span class="string">"Well implemented with consistent interface"</span>
+    }
+  ],
+
+  <span class="string">"potentialProblems"</span>: [
+    {
+      <span class="string">"title"</span>: <span class="string">"Tight coupling between OrderService and PaymentGateway"</span>,
+      <span class="string">"severity"</span>: <span class="string">"medium"</span>,
+      <span class="string">"affectedModules"</span>: [<span class="string">"src/services/"</span>, <span class="string">"src/payments/"</span>]
+    }
+  ],
+
+  <span class="string">"securityIssues"</span>: [
+    {
+      <span class="string">"title"</span>: <span class="string">"SQL query concatenation in search endpoint"</span>,
+      <span class="string">"severity"</span>: <span class="string">"high"</span>,
+      <span class="string">"recommendation"</span>: <span class="string">"Use parameterized queries"</span>
+    }
+  ],
+
+  <span class="string">"suggestedImprovements"</span>: [
+    {
+      <span class="string">"title"</span>: <span class="string">"Extract payment processing into dedicated module"</span>,
+      <span class="string">"priority"</span>: <span class="string">"high"</span>,
+      <span class="string">"effort"</span>: <span class="string">"medium"</span>,
+      <span class="string">"impact"</span>: <span class="string">"Reduces coupling, enables independent testing"</span>
+    }
+  ]
+}
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer>
+  <div class="container">
+    <p style="margin-bottom:0.5rem;">
+      <strong style="color:white;">ArchLens</strong> &mdash; AI-Powered Architecture Review Platform
+    </p>
+    <p style="margin-bottom:0;">
+      Built with <a href="https://docs.anthropic.com/en/docs/about-claude/models">Claude</a> &middot;
+      <a href="https://nextjs.org">Next.js</a> &middot;
+      <a href="https://fastify.dev">Fastify</a> &middot;
+      <a href="https://orm.drizzle.team">Drizzle</a> &middot;
+      MIT License
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>

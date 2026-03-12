@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build shared packages
+        run: npx turbo run build --filter=@archlens/shared --filter=@archlens/db
+
+      - name: Typecheck
+        run: npx turbo run typecheck
+
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+    strategy:
+      matrix:
+        service: [api, worker, web]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -f apps/${{ matrix.service }}/Dockerfile -t archlens-${{ matrix.service }}:ci .

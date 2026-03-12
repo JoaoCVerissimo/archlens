@@ -1,0 +1,30 @@
+{
+  "name": "@archlens/worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@archlens/db": "*",
+    "@archlens/shared": "*",
+    "bullmq": "^5.0.0",
+    "simple-git": "^3.27.0",
+    "tree-sitter": "^0.22.0",
+    "tree-sitter-typescript": "^0.23.0",
+    "tree-sitter-python": "^0.23.0",
+    "adm-zip": "^0.5.16"
+  },
+  "devDependencies": {
+    "@types/adm-zip": "^0.5.7",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.7.0"
+  }
+}

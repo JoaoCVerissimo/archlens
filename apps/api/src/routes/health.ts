@@ -1,4 +1,5 @@
 import type { FastifyInstance } from "fastify";
+import { sql } from "drizzle-orm";
 
 export async function healthRoutes(fastify: FastifyInstance) {
   fastify.get("/health", async () => {
@@ -7,7 +8,7 @@ export async function healthRoutes(fastify: FastifyInstance) {
 
     try {
       // Test database connectivity
-      await fastify.db.execute(new (await import("drizzle-orm")).SQL(["SELECT 1"]));
+      await fastify.db.execute(sql`SELECT 1`);
       dbOk = true;
     } catch {
       // db unreachable

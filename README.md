@@ -188,6 +188,7 @@ curl http://localhost:3001/api/v1/analyses/<id>/findings \
 | `REDIS_URL` | No | `redis://localhost:6379` | Redis connection string |
 | `API_PORT` | No | `3001` | API server port |
 | `API_KEY` | No | `archlens-dev-key` | API authentication key |
+| `REPO_STORAGE_PATH` | No | `/data/repos` | Directory for cloned repositories |
 | `NEXT_PUBLIC_API_URL` | No | `http://localhost:3001/api/v1` | API URL for frontend |
 
 ## Development
